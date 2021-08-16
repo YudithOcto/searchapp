@@ -11,7 +11,7 @@ class NetworkInterceptor: Interceptor {
         val newRequest = request
             .newBuilder()
             .addHeader("Accept", "application/vnd.github.v3+json")
-            .addHeader("Authorization", "token $TOKEN")
+//            .addHeader("Authorization", "token $TOKEN")
             .build()
 
         return chain.proceed(newRequest)
