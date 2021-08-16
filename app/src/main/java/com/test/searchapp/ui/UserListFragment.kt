@@ -85,7 +85,7 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
                     userListAdapter.itemCount < 1){
                     listUser.isVisible = false
                     textNotFound.isVisible = true
-                } 
+                }
             }
         }
     }

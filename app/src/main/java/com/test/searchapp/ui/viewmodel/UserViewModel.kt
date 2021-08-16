@@ -10,7 +10,7 @@ import com.test.searchapp.domain.model.User
 import com.test.searchapp.repository.UserRepository
 import com.test.searchapp.util.REGEX_ALLOWED
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,19 +23,13 @@ class UserViewModel @Inject constructor(
 
     fun getUsersByName(query: String? = "") {
         viewModelScope.launch {
-            repository.getUsersByName(query.encodeQuery()).collectLatest {
+            repository.getUsersByName(query.encodeQuery()).collect {
                 state.postValue(State.GetUserData(it))
             }
         }
     }
 
-    private fun String?.encodeQuery(): String {
-        return if (this.isNullOrBlank()) {
-            Uri.encode("$this+in:login", REGEX_ALLOWED)
-        } else {
-            Uri.encode(this, REGEX_ALLOWED)
-        }
-    }
+    private fun String?.encodeQuery(): String =  Uri.encode("$this+in:login", REGEX_ALLOWED)
 
     sealed class State {
         data class GetUserData(val data: PagingData<User>) : State()

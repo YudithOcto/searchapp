@@ -14,7 +14,7 @@ class UserRepositoryImpl @Inject constructor(
     override fun getUsersByName(query: String?) =
         Pager(
             config = PagingConfig(
-                pageSize = 20,
+                pageSize = 10,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = { UsersPagingDataSource(userService, mapper, query) }

@@ -3,7 +3,6 @@ package com.test.searchapp.repositories
 import androidx.paging.PagingSource
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.given
-import com.nhaarman.mockitokotlin2.whenever
 import com.test.searchapp.domain.model.User
 import com.test.searchapp.network.GithubApiService
 import com.test.searchapp.network.model.UserDtoMapper
@@ -72,26 +71,7 @@ class UserRepositoryTest {
     }
 
     @Test
-    fun `Success api call have data but isComplete true`() = runBlockingTest {
-        whenever(githubApiService.getUserByName(any(), any(), any())).thenReturn(userListResponse)
-        val expectedResult = PagingSource.LoadResult.Page(
-            data = mapper.mapToDomainModel(userListResponse.items),
-            prevKey = null,
-            nextKey = null
-        )
-        assertEquals(
-            expectedResult, usersPagingDataSource.load(
-                PagingSource.LoadParams.Refresh(
-                    key = 0,
-                    loadSize = 10,
-                    placeholdersEnabled = false
-                )
-            )
-        )
-    }
-
-    @Test
-    fun `Success api call and have next data`() = runBlockingTest {
+    fun `Success api call and have next paging data`() = runBlockingTest {
         given(githubApiService.getUserByName(any(), any(), any())).willReturn(userListPaginated)
 
         // prev key = 0 because we are starting the pagination call from 0
@@ -126,23 +106,44 @@ class UserRepositoryTest {
         )))
     }
 
-    companion object {
-        private val userListResponse = UserListResponseDto(
-            listOf(
-                UserResponseDto("test_user", "avatar_user", 1)
-            ), true
+    @Test
+    fun `Success api call and return item below page size request with false complete result`() = runBlockingTest {
+        given(githubApiService.getUserByName(any(), any(), any())).willReturn(userListUnPaginated)
+
+        val expectedResult = PagingSource.LoadResult.Page(
+            data = mapper.mapToDomainModel(userListUnPaginated.items),
+            prevKey = null,
+            nextKey = null
         )
 
+        assertEquals(expectedResult, usersPagingDataSource.load(PagingSource.LoadParams.Refresh(
+            key = 0,
+            loadSize = 10,
+            placeholdersEnabled = false
+        )))
+    }
+
+    companion object {
         private val emptyUserResponse = UserListResponseDto(
             listOf(), true
         )
 
         private val userListPaginated = UserListResponseDto(
             listOf(
-                UserResponseDto("test_user", "avatar_user", 1)
-            ), false
+                UserResponseDto("test_user", "avatar_user", 1),
+                UserResponseDto("test_user", "avatar_user", 1),
+                UserResponseDto("test_user", "avatar_user", 1),
+                UserResponseDto("test_user", "avatar_user", 1),
+                UserResponseDto("test_user", "avatar_user", 1),
+                UserResponseDto("test_user", "avatar_user", 1),
+                UserResponseDto("test_user", "avatar_user", 1),
+                UserResponseDto("test_user", "avatar_user", 1),
+                UserResponseDto("test_user", "avatar_user", 1),
+                UserResponseDto("test_user", "avatar_user", 1),
+            ), true
         )
 
+        private val userListUnPaginated = userListPaginated.copy(incompleteResult = false)
     }
 
 }

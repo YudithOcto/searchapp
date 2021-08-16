@@ -30,7 +30,7 @@ class UsersPagingDataSource(
 
             val prevKey = if (pageNumber > 0) pageNumber - 1 else null
             val nextKey =
-                if (response.items.isNotEmpty() && !response.completeResult) pageNumber + 1 else null
+                if (response.items.isNotEmpty() && response.incompleteResult) pageNumber + 1 else null
             LoadResult.Page(
                 data = mapper.mapToDomainModel(response.items),
                 prevKey = prevKey,

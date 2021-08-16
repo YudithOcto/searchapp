@@ -5,5 +5,5 @@ import com.google.gson.annotations.SerializedName
 data class UserListResponseDto(
     val items: List<UserResponseDto>,
     @SerializedName("incomplete_results")
-    val completeResult: Boolean
+    val incompleteResult: Boolean
 )
