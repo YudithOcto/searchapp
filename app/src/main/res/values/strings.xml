@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">searchapp</string>
+    <string name="search_github_user">Search Github User</string>
+    <string name="explore_github_users">Explore Github Users</string>
+    <string name="try_again">Try Again</string>
+    <string name="not_found">Users not found</string>
+    <string name="users">Users</string>
+    <string name="retry">Retry</string>
+    <string name="result_could_not_be_loaded">Result could not be loaded</string>
 </resources>
