@@ -75,14 +75,17 @@ class UserListFragment : Fragment(R.layout.fragment_user_list) {
         userListAdapter.addLoadStateListener { loadState ->
             binding.apply {
                 progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                listUser.isVisible = loadState.source.refresh !is LoadState.Error
+                listUser.isVisible = loadState.source.refresh is LoadState.NotLoading
+                btnTryAgain.isVisible =loadState.source.refresh is LoadState.Error
+                textNotFound.isVisible = loadState.source.refresh is LoadState.Error
 
-                if (loadState.source.refresh is LoadState.Error
-                    && userListAdapter.itemCount < 1
-                ) {
+                //not found
+                if (loadState.source.refresh is LoadState.NotLoading &&
+                    loadState.append.endOfPaginationReached &&
+                    userListAdapter.itemCount < 1){
+                    listUser.isVisible = false
                     textNotFound.isVisible = true
-                    btnTryAgain.isVisible = true
-                }
+                } 
             }
         }
     }
